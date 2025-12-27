@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crop Recommendation | BM25</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #11998e;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0f8a7d;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #16a085;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🌾 Crop Recommendation</h1>
+    <p>BM25 Information Retrieval Model</p>
+
+    <div class="grid">
+        <input id="N" placeholder="Nitrogen (N)">
+        <input id="P" placeholder="Phosphorus (P)">
+        <input id="K" placeholder="Potassium (K)">
+        <input id="temperature" placeholder="Temperature (°C)">
+        <input id="humidity" placeholder="Humidity (%)">
+        <input id="ph" placeholder="pH value">
+        <input id="rainfall" placeholder="Rainfall (mm)">
+    </div>
+
+    <button onclick="recommend()">Recommend Crop</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function recommend() {
+    const data = {
+        N: N.value,
+        P: P.value,
+        K: K.value,
+        temperature: temperature.value,
+        humidity: humidity.value,
+        ph: ph.value,
+        rainfall: rainfall.value
+    };
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerHTML =
+            "✅ Recommended Crops:<br>" + data.recommended_crops.join(", ");
+    });
+}
+</script>
+
+</body>
+</html>
